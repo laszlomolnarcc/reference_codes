@@ -15,6 +15,19 @@ def showMenu():
     print("1. PLAY GAME (2 player)")
     print("2. QUIT\n")
 
+def processMenuDecision():
+    userInput = ""
+    while (userInput != "1" and userInput != "2"):
+        userInput = input("Choose from the numbers (write 1 or 2 and press ENTER): ")
+    if "1" == userInput:
+        startTwoPlayerGame()
+    if "2" == userInput:
+        print("Bye!")
+
+def startTwoPlayerGame():
+    print("Start the game!!")
+
 clearScreen()
 showWelcomeInfo()
 showMenu()
+processMenuDecision()
