@@ -33,25 +33,27 @@ def processMenuDecision():
 def playTwoPlayerGame():
     initGame()
     global currentPlayer
-    currentPlayer = decideWhomStarts()
+    currentPlayer = decideWhoStarts()
     doGameLoop()
-    print("'" + currentPlayer + "' won the game!")
     input("Press ENTER to go back to the Main Menu.")
 
 def initGame():
+    global table
     table = [[".", ".", "."], [".", ".", "."], [".", ".", "."]]
 
-def decideWhomStarts():
+def decideWhoStarts():
     clearScreen()
-    whomStarts = ""
-    while whomStarts != "X" and whomStarts != "O":
-        whomStarts = input("'X'or 'O' should start the game (X/O)? ")
-    return whomStarts
+    whoStarts = ""
+    while whoStarts != "X" and whoStarts != "O":
+        whoStarts = input("'X'or 'O' should start the game (X/O)? ").upper()
+    return whoStarts
 
 def doGameLoop():
+    global table
     drawTable()
-    finished = False
-    while finished == False:
+    remainingSteps = len(table) * len(table[0])
+    gameWon = False
+    while gameWon == False and remainingSteps > 0:
         coords = getTableCoordsFromPlayer()
         while False == coordsAreValid(coords):
             print("The place you chosen is not empty!")
@@ -59,10 +61,12 @@ def doGameLoop():
         global currentPlayer
         table[coords[0]][coords[1]] = currentPlayer
         if True == gameFinished(coords):
-            finished = True
+            gameWon = True
         else:
             changeCurrentPlayer()
         drawTable()
+        remainingSteps = remainingSteps - 1
+    evaluateGameEnding(gameWon)
 
 def drawTable():
     clearScreen()
@@ -79,8 +83,9 @@ def getTableCoordsFromPlayer():
     coords = (-1, -1)
     while coords[0] == -1 or coords[1] == -1:
         global currentPlayer
-        nextMove = input("'" + currentPlayer + "', what is your next move(for ex. A 2)? ")
-        if len(nextMove) > 2:
+        nextMove = input("'" + currentPlayer + "', what is your next move(for ex. A2)? ")
+        if len(nextMove) > 1:
+            nextMove = nextMove.upper()
             coords = parsePlayerInput(nextMove)
     return coords
 
@@ -93,11 +98,11 @@ def parsePlayerInput(pInput):
         col = 1
     if pInput[0] == 'C':
         col = 2
-    if pInput[2] == '1':
+    if pInput[1] == '1':
         row = 0
-    if pInput[2] == '2':
+    if pInput[1] == '2':
         row = 1
-    if pInput[2] == '3':
+    if pInput[1] == '3':
         row = 2
     return col, row
 
@@ -150,6 +155,12 @@ def checkSameItems(startCoord, incCoord):
         finalCoord = nextCoord
         nextCoord = (nextCoord[0] + incCoord[0], nextCoord[1] + incCoord[1])
     return finalCoord
+
+def evaluateGameEnding(gameWon):
+    if gameWon == True:
+            print("'" + currentPlayer + "' won the game!")
+    else:
+        print("It's a draw!")
 
 #main
 menuDecision = 0
