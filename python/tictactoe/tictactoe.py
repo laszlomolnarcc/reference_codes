@@ -5,71 +5,71 @@ import os
 
 #global variables
 table = [[".", ".", "."], [".", ".", "."], [".", ".", "."]]
-currentPlayer = "X"
+current_player = "X"
 
-def clearScreen():
+def clear_screen():
     os.system('cls' if os.name == 'nt' else 'clear')
 
-def showWelcomeInfo():
+def show_welcome_info():
     print("--- TicTacToe ---\n")
     print("Welcome! The goal of the game is to make three X's or O's in a line.")
     print("The line can be in a column/row or it can be diagonal.\n")
 
-def showMenu():
+def show_menu():
     print("1. PLAY GAME (2 player)")
     print("2. QUIT\n")
 
-def processMenuDecision():
-    userInput = ""
-    while (userInput != "1" and userInput != "2"):
-        userInput = input("Choose from the numbers (write 1 or 2 and press ENTER): ")
-    if "1" == userInput:
-        playTwoPlayerGame()
+def process_menu_decision():
+    user_input = ""
+    while (user_input != "1" and user_input != "2"):
+        user_input = input("Choose from the numbers (write 1 or 2 and press ENTER): ")
+    if "1" == user_input:
+        play_two_player_game()
         return 1
-    if "2" == userInput:
+    if "2" == user_input:
         print("Bye!")
     return 2
 
-def playTwoPlayerGame():
-    initGame()
-    global currentPlayer
-    currentPlayer = decideWhoStarts()
-    doGameLoop()
+def play_two_player_game():
+    init_game()
+    global current_player
+    current_player = decide_who_starts()
+    do_game_loop()
     input("Press ENTER to go back to the Main Menu.")
 
-def initGame():
+def init_game():
     global table
     table = [[".", ".", "."], [".", ".", "."], [".", ".", "."]]
 
-def decideWhoStarts():
-    clearScreen()
-    whoStarts = ""
-    while whoStarts != "X" and whoStarts != "O":
-        whoStarts = input("'X'or 'O' should start the game (X/O)? ").upper()
-    return whoStarts
+def decide_who_starts():
+    clear_screen()
+    who_starts = ""
+    while who_starts != "X" and who_starts != "O":
+        who_starts = input("'X'or 'O' should start the game (X/O)? ").upper()
+    return who_starts
 
-def doGameLoop():
+def do_game_loop():
     global table
-    drawTable()
-    remainingSteps = len(table) * len(table[0])
-    gameWon = False
-    while gameWon == False and remainingSteps > 0:
-        coords = getTableCoordsFromPlayer()
-        while False == coordsAreValid(coords):
+    draw_table()
+    remaining_steps = len(table) * len(table[0])
+    game_won = False
+    while game_won == False and remaining_steps > 0:
+        coords = get_table_coords_from_player()
+        while False == coords_are_valid(coords):
             print("The place you chosen is not empty!")
-            coords = getTableCoordsFromPlayer()
-        global currentPlayer
-        table[coords[0]][coords[1]] = currentPlayer
-        if True == gameFinished(coords):
-            gameWon = True
+            coords = get_table_coords_from_player()
+        global current_player
+        table[coords[0]][coords[1]] = current_player
+        if True == game_finished(coords):
+            game_won = True
         else:
-            changeCurrentPlayer()
-        drawTable()
-        remainingSteps = remainingSteps - 1
-    evaluateGameEnding(gameWon)
+            change_current_player()
+        draw_table()
+        remaining_steps = remaining_steps - 1
+    evaluate_game_ending(game_won)
 
-def drawTable():
-    clearScreen()
+def draw_table():
+    clear_screen()
     print("    A   B   C")
     print("  -------------")
     print("1 |", table[0][0], "|", table[1][0], "|", table[2][0], "|")
@@ -79,93 +79,93 @@ def drawTable():
     print("3 |", table[0][2], "|", table[1][2], "|", table[2][2], "|")
     print("  -------------")
 
-def getTableCoordsFromPlayer():
+def get_table_coords_from_player():
     coords = (-1, -1)
     while coords[0] == -1 or coords[1] == -1:
-        global currentPlayer
-        nextMove = input("'" + currentPlayer + "', what is your next move(for ex. A2)? ")
-        if len(nextMove) > 1:
-            nextMove = nextMove.upper()
-            coords = parsePlayerInput(nextMove)
+        global current_player
+        next_move = input("'" + current_player + "', what is your next move(for ex. A2)? ")
+        if len(next_move) > 1:
+            next_move = next_move.upper()
+            coords = parse_player_input(next_move)
     return coords
 
-def parsePlayerInput(pInput):
+def parse_player_input(player_input):
     col = -1
     row = -1
-    if pInput[0] == 'A':
+    if player_input[0] == 'A':
         col = 0
-    if pInput[0] == 'B':
+    if player_input[0] == 'B':
         col = 1
-    if pInput[0] == 'C':
+    if player_input[0] == 'C':
         col = 2
-    if pInput[1] == '1':
+    if player_input[1] == '1':
         row = 0
-    if pInput[1] == '2':
+    if player_input[1] == '2':
         row = 1
-    if pInput[1] == '3':
+    if player_input[1] == '3':
         row = 2
     return col, row
 
-def coordsAreValid(coords):
+def coords_are_valid(coords):
     if table[coords[0]][coords[1]] == ".":
         return True
     return False
 
-def changeCurrentPlayer():
-    global currentPlayer
-    if currentPlayer == "X": 
-        currentPlayer = "O" 
+def change_current_player():
+    global current_player
+    if current_player == "X": 
+        current_player = "O" 
     else:
-        currentPlayer = "X"
+        current_player = "X"
 
-def gameFinished(lastCoord):
+def game_finished(last_coord):
     # check if the player won
-    global currentPlayer
+    global current_player
 
     # horizontal checking
-    startPoint = checkSameItems(lastCoord, (-1, 0))
-    endPoint = checkSameItems(lastCoord, (1, 0))
-    if endPoint[0] - startPoint[0] >= 2:
+    start_point = check_same_items(last_coord, (-1, 0))
+    end_point = check_same_items(last_coord, (1, 0))
+    if end_point[0] - start_point[0] >= 2:
        return True
     # vertical checking
-    startPoint = checkSameItems(lastCoord, (0, -1))
-    endPoint = checkSameItems(lastCoord, (0, 1))
-    if endPoint[1] - startPoint[1] >= 2:
+    start_point = check_same_items(last_coord, (0, -1))
+    end_point = check_same_items(last_coord, (0, 1))
+    if end_point[1] - start_point[1] >= 2:
        return True
     # diagonal - left-to-right checking
-    startPoint = checkSameItems(lastCoord, (-1, -1))
-    endPoint = checkSameItems(lastCoord, (1, 1))
-    if endPoint[0] - startPoint[0] >= 2:
+    start_point = check_same_items(last_coord, (-1, -1))
+    end_point = check_same_items(last_coord, (1, 1))
+    if end_point[0] - start_point[0] >= 2:
        return True
     # diagonal - right-to-left checking
-    startPoint = checkSameItems(lastCoord, (1, -1))
-    endPoint = checkSameItems(lastCoord, (-1, 1))
-    if abs(endPoint[0] - startPoint[0]) >= 2:
+    start_point = check_same_items(last_coord, (1, -1))
+    end_point = check_same_items(last_coord, (-1, 1))
+    if abs(end_point[0] - start_point[0]) >= 2:
        return True
 
     return False
 
-def checkSameItems(startCoord, incCoord):
-    finalCoord = startCoord
-    nextCoord = (finalCoord[0] + incCoord[0], finalCoord[1] + incCoord[1])
+def check_same_items(start_coord, inc_coord):
+    final_coord = start_coord
+    next_coord = (final_coord[0] + inc_coord[0], final_coord[1] + inc_coord[1])
 
-    while nextCoord[0] >= 0 and nextCoord[0] <= 2 and \
-          nextCoord[1] >= 0 and nextCoord[1] <= 2 and \
-          table[nextCoord[0]][nextCoord[1]] == currentPlayer:
-        finalCoord = nextCoord
-        nextCoord = (nextCoord[0] + incCoord[0], nextCoord[1] + incCoord[1])
-    return finalCoord
+    while next_coord[0] >= 0 and next_coord[0] <= 2 and \
+          next_coord[1] >= 0 and next_coord[1] <= 2 and \
+          table[next_coord[0]][next_coord[1]] == current_player:
+        final_coord = next_coord
+        next_coord = (next_coord[0] + inc_coord[0], next_coord[1] + inc_coord[1])
+    return final_coord
 
-def evaluateGameEnding(gameWon):
-    if gameWon == True:
-            print("'" + currentPlayer + "' won the game!")
+def evaluate_game_ending(game_won):
+    if game_won == True:
+            print("'" + current_player + "' won the game!")
     else:
         print("It's a draw!")
 
 #main
-menuDecision = 0
-while menuDecision != 2:
-    clearScreen()
-    showWelcomeInfo()
-    showMenu()
-    menuDecision = processMenuDecision()
+menu_decision = 0
+while menu_decision != 2:
+    clear_screen()
+    show_welcome_info()
+    show_menu()
+    menu_decision = process_menu_decision()
